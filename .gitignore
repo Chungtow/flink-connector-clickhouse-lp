@@ -1,0 +1,23 @@
+# Maven 构建产物
+target/
+*.class
+
+# 容器化构建输出（build.sh 的挂载目录，产物不入库）
+build/
+
+# 日志
+*.log
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# 系统
+.DS_Store
+Thumbs.db
