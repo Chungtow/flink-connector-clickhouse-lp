@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  flink-connector-clickhouse-lp：Apache Flink 1.17 的 ClickHouse JDBC 方言扩展
+  - 目标 JDK 8（与集群 Flink 运行时一致），字节码 major 52
+  - 所有 Flink / 连接器依赖均 provided：运行时由 $FLINK_HOME/lib 提供，禁止打包（避免 classloader 冲突）
+  - 通过 SPI（META-INF/services/org.apache.flink.connector.jdbc.dialect.JdbcDialectFactory）注册
+  - 构建统一走 build.sh（容器化），宿主不安装 JDK/Maven
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.lp.flink</groupId>
+  <artifactId>flink-connector-clickhouse-dialect</artifactId>
+  <version>${revision}</version>
+  <packaging>jar</packaging>
+
+  <name>flink-connector-clickhouse-dialect</name>
+  <description>ClickHouse JdbcDialect for Apache Flink 1.17 (external SPI extension of flink-connector-jdbc)</description>
+
+  <properties>
+    <revision>1.0.0</revision>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <flink.version>1.17.2</flink.version>
+    <flink.connector.jdbc.version>3.1.2-1.17</flink.connector.jdbc.version>
+    <junit.version>4.13.2</junit.version>
+  </properties>
+
+  <dependencies>
+    <!-- 连接器：提供 JdbcDialect / JdbcDialectFactory / JdbcRowConverter 契约 -->
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-jdbc</artifactId>
+      <version>${flink.connector.jdbc.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Table 类型系统：LogicalType / RowType / ValidationException -->
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-table-common</artifactId>
+      <version>${flink.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- RowData 等运行时内部数据结构 -->
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-core</artifactId>
+      <version>${flink.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <!-- 产物名对齐父仓库制品约定：flink-connector-clickhouse-dialect-1.17-<VER>.jar -->
+    <finalName>${project.artifactId}-1.17-${revision}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>

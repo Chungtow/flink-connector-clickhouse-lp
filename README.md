@@ -87,4 +87,11 @@ bash ../scripts/flink/release_flink_clickhouse_connector.sh 1.0.0
 
 ## 状态
 
-S0.5 骨架阶段：方言 + 工厂 + RowConverter + SPI 注册 + 容器化构建，尚待集成验证（父仓库计划 `docs/plan/20261101-实时链路C0接入计划…md`）。
+S0.5 骨架完成（2026-11-01）：方言 + 工厂 + RowConverter + SPI 注册 + 容器化构建已跑通。
+
+- 单测 10 项全绿（URL 匹配 / 反引号引用 / SQL 生成 / upsert 置空 / 类型白名单 / 非法类型拒绝 / SPI 文件存在 / ServiceLoader 可发现）
+- 产物 `flink-connector-clickhouse-dialect-1.17-1.0.0.jar`：7 KB、3 个 class、含 SPI 文件、**不含**连接器类
+- 下一步：接入父仓库发布闸门（`software/clickhouse-connector/`）→ Flink 集群 POC（单条消息写入 `traccar.ods_tc_devices`）
+
+计划与验收口径见父仓库 `docs/plan/20261101-实时链路C0接入计划（ClickHouse-Flink-Dinky三侧准备）.md`。
+
